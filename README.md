@@ -34,7 +34,7 @@
 一键启动
 
 
-### Docker（推荐）
+Docker（推荐）
 
 ```bash
 git clone https://github.com/yourname/shijie-nav.git
@@ -44,7 +44,7 @@ docker-compose up -d
 ```
 
 
-### 本地开发
+本地开发
 
 ```bash
 pip install -r requirements.txt
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ```
 
 
-## 📊 技术指标
+技术指标
 
 
 | 指标 | 数值 |

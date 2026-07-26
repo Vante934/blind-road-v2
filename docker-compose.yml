@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+      - ./models:/app/models
+    environment:
+      - DEBUG=true
+      - YOLO_DEVICE=cpu
+    command: uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload

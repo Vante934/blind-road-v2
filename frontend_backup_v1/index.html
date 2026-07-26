@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
+    <title>视界导航</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div id="sr-status" role="status" aria-live="polite" class="sr-only"></div>
+<div id="sr-alert" role="alert" aria-live="assertive" class="sr-only"></div>
+
+<div id="app">
+
+    <header id="status-bar" role="banner" aria-label="系统状态">
+        <div class="status-left">
+            <span id="blind-road-indicator"
+                  class="indicator"
+                  aria-label="盲道状态">
+                未检测
+            </span>
+        </div>
+        <div class="status-right">
+            <span id="conn-badge"
+                  aria-label="网络连接状态：离线">离线</span>
+            <span id="fps-badge"
+                  aria-hidden="true">0 FPS</span>
+        </div>
+    </header>
+
+    <main id="camera-area" role="main" aria-label="实时检测画面">
+        <video id="camera-feed"
+               autoplay playsinline muted
+               aria-label="摄像头实时画面"
+               role="img">
+        </video>
+        <canvas id="detection-canvas" aria-hidden="true"></canvas>
+
+        <div id="warning-overlay"
+             class="level-0"
+             role="alert"
+             aria-live="assertive"
+             aria-atomic="true">
+            <p id="warning-text" aria-label=""></p>
+        </div>
+
+        <div id="direction-bar"
+             aria-hidden="true"
+             role="presentation">
+            <div id="dir-left" class="dir-zone">左</div>
+            <div id="dir-center" class="dir-zone">中</div>
+            <div id="dir-right" class="dir-zone">右</div>
+        </div>
+    </main>
+
+    <section id="stats-bar" aria-label="检测统计" aria-hidden="true">
+        <div class="stat"><span class="stat-label">盲道</span>
+             <span id="stat-blind">--</span></div>
+        <div class="stat"><span class="stat-label">障碍</span>
+             <span id="stat-obs">0</span></div>
+        <div class="stat"><span class="stat-label">距离</span>
+             <span id="stat-dist">--</span></div>
+        <div class="stat"><span class="stat-label">预警</span>
+             <span id="stat-level">安全</span></div>
+    </section>
+
+    <footer id="control-bar" role="navigation" aria-label="操作控制">
+        <button id="btn-settings"
+                type="button"
+                aria-label="打开设置"
+                aria-haspopup="dialog">⚙️</button>
+
+        <button id="btn-main"
+                type="button"
+                aria-label="开始检测，双击屏幕可快速切换"
+                aria-pressed="false">
+            <span class="btn-icon">▶</span>
+            <span class="btn-text">开始检测</span>
+        </button>
+
+        <button id="btn-sos"
+                type="button"
+                aria-label="紧急求助，长按三秒触发">🆘</button>
+    </footer>
+
+</div>
+
+<div id="settings-panel"
+     role="dialog"
+     aria-modal="true"
+     aria-label="系统设置"
+     aria-hidden="true"
+     hidden>
+    <div class="panel-header">
+        <h2>设置</h2>
+        <button id="btn-close-settings" aria-label="关闭设置">✕</button>
+    </div>
+    <div class="panel-body">
+        <div class="setting-group" id="user-section">
+        </div>
+
+        <div class="setting-group">
+            <label for="input-fps">
+                发送帧率
+                <small>（越高越流畅，越耗电）</small>
+            </label>
+            <input type="range" id="input-fps"
+                   min="1" max="20" value="10"
+                   aria-label="帧率设置">
+            <output for="input-fps" id="fps-output">10 FPS</output>
+        </div>
+
+        <div class="setting-group">
+            <label for="input-voice-speed">语音速度</label>
+            <input type="range" id="input-voice-speed"
+                   min="0.5" max="2" step="0.1" value="1.0"
+                   aria-label="语音播报速度">
+            <output for="input-voice-speed" id="speed-output">1.0x</output>
+        </div>
+
+        <div class="setting-group">
+            <label>
+                <input type="checkbox" id="input-voice-cmd" checked
+                       aria-label="启用语音指令">
+                启用语音指令识别
+            </label>
+        </div>
+
+        <div class="setting-group">
+            <label>服务器地址</label>
+            <input type="url" id="input-server"
+                   value=""
+                   placeholder="留空自动连接"
+                   aria-label="后端服务器地址">
+            <small>留空则自动连接当前域名</small>
+        </div>
+    </div>
+</div>
+
+<div id="auth-panel"
+     role="dialog"
+     aria-modal="true"
+     aria-label="登录注册"
+     aria-hidden="true"
+     hidden>
+</div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

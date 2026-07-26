@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+venv/
+env/
+.env
+
+# Model weights (大文件不传)
+*.pt
+*.onnx
+*.engine
+!models/best.pt
+
+# 训练输出
+results/
+runs/
+
+# 数据集（图片太大不传）
+tools/desktop_trainer/datasets/*/images/
+tools/desktop_trainer/datasets/*/labels/
+!tools/desktop_trainer/datasets/*/dataset.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (前端如果有)
+node_modules/
+
+# Ultralytics
+.ultralytics/

@@ -1,0 +1,11 @@
+path: F:/blind_road_dataset/blind_road_v2/tools/desktop_trainer/datasets/blind_road
+train: images
+val: images      
+nc: 6
+names:
+  0: blind_path
+  1: obstacle
+  2: person
+  3: vehicle
+  4: pothole
+  5: step

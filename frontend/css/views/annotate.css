@@ -1,0 +1,759 @@
+/* ============================================================ 
+    annotate.css — 标注工具页样式 
+    「视界」盲道智能导航系统 
+    ============================================================ */ 
+
+/* ---------- 整体布局 ---------- */ 
+.annotate-layout { 
+  display: flex; 
+  height: calc(100vh - 64px); 
+  overflow: hidden; 
+  background: var(--bg-secondary); 
+  gap: 0; 
+} 
+
+/* ---------- 左侧边栏 ---------- */ 
+.annotate-sidebar { 
+  width: 220px; 
+  min-width: 200px; 
+  background: white; 
+  border-right: 1px solid var(--border-color); 
+  overflow-y: auto; 
+  padding: 12px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+} 
+
+.sidebar-section { 
+  padding: 10px 0; 
+  border-bottom: 1px solid var(--bg-secondary); 
+} 
+
+.sidebar-section:last-child { border-bottom: none; } 
+
+.sidebar-title { 
+  font-size: 12px; 
+  font-weight: 600; 
+  color: var(--text-secondary); 
+  text-transform: uppercase; 
+  letter-spacing: 0.5px; 
+  margin-bottom: 8px; 
+} 
+
+/* 文件拖放 */ 
+.file-drop-zone { 
+  border: 2px dashed var(--border-color); 
+  border-radius: 8px; 
+  padding: 12px; 
+  text-align: center; 
+  cursor: pointer; 
+  transition: all 0.2s; 
+  margin-top: 8px; 
+} 
+
+.file-drop-zone:hover, 
+.file-drop-zone.drag-over { 
+  border-color: var(--primary); 
+  background: rgba(74,155,245,0.05); 
+} 
+
+.drop-hint { font-size: 12px; color: var(--text-muted); } 
+
+.image-counter { 
+  font-size: 12px; 
+  color: var(--text-secondary); 
+  margin-top: 6px; 
+  text-align: center; 
+} 
+
+/* 图片导航 */ 
+.nav-controls { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  gap: 4px; 
+  margin-bottom: 8px; 
+} 
+
+.btn-icon { 
+  width: 32px; 
+  height: 32px; 
+  padding: 0; 
+  border-radius: 6px; 
+  font-size: 16px; 
+  line-height: 1; 
+  background: var(--bg-secondary); 
+  border: 1px solid var(--border-color); 
+  cursor: pointer; 
+  transition: background 0.2s; 
+} 
+
+.btn-icon:hover { background: var(--primary); color: white; } 
+
+.img-index { 
+  font-size: 13px; 
+  color: var(--text-primary); 
+  font-weight: 500; 
+} 
+
+/* 缩略图条 */ 
+.thumbnail-strip { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+  max-height: 120px; 
+  overflow-y: auto; 
+} 
+
+.thumbnail-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  padding: 4px 6px; 
+  border-radius: 6px; 
+  cursor: pointer; 
+  font-size: 11px; 
+  color: var(--text-secondary); 
+  transition: background 0.15s; 
+  white-space: nowrap; 
+  overflow: hidden; 
+} 
+
+.thumbnail-item:hover { background: var(--bg-secondary); } 
+.thumbnail-item.active { background: rgba(74,155,245,0.12); color: var(--primary); font-weight: 600; } 
+
+.thumbnail-dot { 
+  width: 8px; 
+  height: 8px; 
+  border-radius: 50%; 
+  flex-shrink: 0; 
+  background: var(--border-color); 
+} 
+
+.thumbnail-item.labeled .thumbnail-dot { background: var(--success); } 
+
+/* 类别按钮 */ 
+.category-list { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+} 
+
+.category-btn { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  padding: 7px 10px; 
+  border-radius: 6px; 
+  border: 1.5px solid transparent; 
+  background: var(--bg-secondary); 
+  cursor: pointer; 
+  font-size: 13px; 
+  text-align: left; 
+  transition: all 0.15s; 
+  width: 100%; 
+} 
+
+.category-btn:hover { border-color: var(--border-color); } 
+.category-btn.active { 
+  border-color: currentColor; 
+  background: white; 
+  font-weight: 600; 
+} 
+
+.color-dot { 
+  width: 12px; 
+  height: 12px; 
+  border-radius: 50%; 
+  flex-shrink: 0; 
+} 
+
+/* 操作按钮 */ 
+.btn-block { width: 100%; margin-bottom: 6px; } 
+.btn-warning { background: #FAAD14; color: white; } 
+.btn-danger  { background: #F5222D; color: white; } 
+.btn-success { background: #52C41A; color: white; } 
+
+/* 导出信息 */ 
+.export-info { 
+  font-size: 12px; 
+  color: var(--text-secondary); 
+  margin-bottom: 8px; 
+  text-align: center; 
+} 
+
+/* ---------- 中央画布区 ---------- */ 
+.annotate-canvas-area { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  overflow: hidden; 
+  background: #1a1a2e; 
+} 
+
+/* 工具栏 */ 
+.canvas-toolbar { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 8px 16px; 
+  background: rgba(255,255,255,0.05); 
+  border-bottom: 1px solid rgba(255,255,255,0.1); 
+  min-height: 44px; 
+} 
+
+.toolbar-hint { 
+  font-size: 13px; 
+  color: rgba(255,255,255,0.6); 
+} 
+
+.toolbar-right { 
+  display: flex; 
+  gap: 6px; 
+} 
+
+.tool-btn { 
+  padding: 5px 10px; 
+  border-radius: 6px; 
+  border: 1px solid rgba(255,255,255,0.2); 
+  background: rgba(255,255,255,0.08); 
+  color: rgba(255,255,255,0.8); 
+  cursor: pointer; 
+  font-size: 12px; 
+  transition: all 0.15s; 
+} 
+
+.tool-btn:hover { background: rgba(255,255,255,0.15); } 
+.tool-btn.active { background: var(--primary); border-color: var(--primary); color: white; } 
+
+/* 画布容器 */ 
+.canvas-container { 
+  flex: 1; 
+  position: relative; 
+  overflow: hidden; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+} 
+
+#annotate-canvas { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  cursor: crosshair; 
+  image-rendering: pixelated; 
+} 
+
+/* 占位提示 */ 
+.canvas-placeholder { 
+  text-align: center; 
+  color: rgba(255,255,255,0.4); 
+  pointer-events: none; 
+  z-index: 1; 
+} 
+
+.canvas-placeholder.hidden { display: none; } 
+
+.placeholder-icon { font-size: 64px; margin-bottom: 16px; } 
+.placeholder-text { font-size: 18px; font-weight: 500; margin-bottom: 8px; } 
+.placeholder-sub  { font-size: 13px; } 
+
+/* ---------- 右侧检查器 ---------- */ 
+.annotate-inspector { 
+  width: 200px; 
+  min-width: 180px; 
+  background: white; 
+  border-left: 1px solid var(--border-color); 
+  display: flex; 
+  flex-direction: column; 
+} 
+
+.inspector-header { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: 12px 14px; 
+  border-bottom: 1px solid var(--bg-secondary); 
+} 
+
+.inspector-header h3 { font-size: 13px; font-weight: 600; margin: 0; } 
+
+ .annotation-count { 
+   font-size: 11px; 
+   background: var(--primary); 
+   color: white; 
+   padding: 2px 7px; 
+   border-radius: 10px; 
+ } 
+
+ /* 标注列表 */ 
+ .annotation-list { 
+   flex: 1; 
+   overflow-y: auto; 
+   padding: 8px; 
+ } 
+
+ .empty-list-hint { 
+   text-align: center; 
+   font-size: 12px; 
+   color: var(--text-muted); 
+   margin-top: 24px; 
+ } 
+
+ .annotation-item { 
+   display: flex; 
+   align-items: center; 
+   gap: 6px; 
+   padding: 6px 8px; 
+   border-radius: 6px; 
+   font-size: 12px; 
+   cursor: pointer; 
+   transition: background 0.15s; 
+   border: 1px solid transparent; 
+ } 
+
+ .annotation-item:hover { background: var(--bg-secondary); } 
+ .annotation-item.selected { background: rgba(74,155,245,0.08); border-color: var(--primary); } 
+
+ .ann-color { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; } 
+ .ann-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } 
+ .ann-delete { color: #F5222D; font-size: 14px; opacity: 0; transition: opacity 0.15s; } 
+ .annotation-item:hover .ann-delete { opacity: 1; } 
+
+ /* 快捷键提示 */ 
+ .inspector-footer { 
+   padding: 10px; 
+   border-top: 1px solid var(--bg-secondary); 
+ } 
+
+ .shortcut-hints { display: flex; flex-direction: column; gap: 4px; } 
+
+ .shortcut-item { 
+   display: flex; 
+   align-items: center; 
+   gap: 6px; 
+   font-size: 11px; 
+   color: var(--text-muted); 
+ } 
+
+ kbd { 
+   display: inline-block; 
+   padding: 1px 5px; 
+   border: 1px solid var(--border-color); 
+   border-radius: 3px; 
+   font-size: 10px; 
+   background: var(--bg-secondary); 
+   font-family: monospace; 
+ } 
+
+ /* ---------- 专业工具介绍区块 ---------- */ 
+ .pro-tools-section { 
+   background: white; 
+   border-top: 1px solid var(--border-color); 
+   padding: 30px 20px; 
+ } 
+
+ .pro-tools-header { 
+   text-align: center; 
+   margin-bottom: 24px; 
+ } 
+
+ .pro-tools-title { 
+   font-size: 24px; 
+   font-weight: 700; 
+   color: var(--text-primary); 
+   margin: 0 0 8px 0; 
+ } 
+
+ .pro-tools-subtitle { 
+   font-size: 14px; 
+   color: var(--text-secondary); 
+   margin: 0; 
+ } 
+
+ /* Tab 切换 */ 
+ .pro-tabs { 
+   display: flex; 
+   justify-content: center; 
+   gap: 8px; 
+   margin-bottom: 24px; 
+ } 
+
+ .pro-tab-btn { 
+   padding: 10px 20px; 
+   border-radius: 8px; 
+   border: 1px solid var(--border-color); 
+   background: white; 
+   font-size: 14px; 
+   cursor: pointer; 
+   transition: all 0.2s; 
+ } 
+
+ .pro-tab-btn:hover { background: var(--bg-secondary); } 
+ .pro-tab-btn.active { 
+   background: var(--primary); 
+   color: white; 
+   border-color: var(--primary); 
+ } 
+
+ /* Tab 面板 */ 
+ .pro-tab-panel { 
+   display: none; 
+ } 
+
+ .pro-tab-panel.active { 
+   display: block; 
+ } 
+
+ .pro-panel-content { 
+   max-width: 900px; 
+   margin: 0 auto; 
+ } 
+
+ .pro-panel-two-col { 
+   display: grid; 
+   grid-template-columns: 1fr 1fr; 
+   gap: 24px; 
+ } 
+
+ /* 功能列表 */ 
+ .pro-feature-list { 
+   display: grid; 
+   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+   gap: 16px; 
+ } 
+
+ .pro-panel-two-col .pro-feature-list { 
+   grid-template-columns: 1fr; 
+ } 
+
+ .pro-feature-item { 
+   display: flex; 
+   gap: 12px; 
+   padding: 16px; 
+   background: var(--bg-secondary); 
+   border-radius: 10px; 
+ } 
+
+ .pro-feature-icon { 
+   font-size: 28px; 
+   flex-shrink: 0; 
+ } 
+
+ .pro-feature-name { 
+   font-size: 15px; 
+   font-weight: 600; 
+   color: var(--text-primary); 
+   margin-bottom: 4px; 
+ } 
+
+ .pro-feature-desc { 
+   font-size: 13px; 
+   color: var(--text-secondary); 
+   line-height: 1.5; 
+ } 
+
+ /* 截图区域 */ 
+ .pro-screenshot-box { 
+   background: var(--bg-secondary); 
+   border-radius: 10px; 
+   overflow: hidden; 
+   aspect-ratio: 4/3; 
+ } 
+
+ .pro-screenshot-placeholder { 
+   height: 100%; 
+   display: flex; 
+   flex-direction: column; 
+   align-items: center; 
+   justify-content: center; 
+   color: var(--text-muted); 
+ } 
+
+ .screenshot-icon { font-size: 48px; margin-bottom: 12px; } 
+ .screenshot-label { font-size: 14px; font-weight: 500; margin-bottom: 4px; } 
+ .screenshot-sub { font-size: 12px; } 
+
+ .pro-screenshot-img { 
+   width: 100%; 
+   height: 100%; 
+   object-fit: cover; 
+ } 
+
+ .pro-screenshot-img.hidden { display: none; } 
+
+ /* 提示框 */ 
+ .pro-panel-tip { 
+   text-align: center; 
+   font-size: 14px; 
+   color: var(--primary); 
+   margin-top: 20px; 
+   padding: 12px; 
+   background: rgba(74,155,245,0.08); 
+   border-radius: 8px; 
+ } 
+
+ /* 下载按钮 */ 
+ .pro-download-btn { 
+   display: inline-flex; 
+   align-items: center; 
+   justify-content: center; 
+   padding: 12px 24px; 
+   background: var(--primary); 
+   color: white; 
+   text-decoration: none; 
+   border-radius: 8px; 
+   font-size: 14px; 
+   font-weight: 600; 
+   margin-top: 16px; 
+   transition: background 0.2s; 
+ } 
+
+ .pro-download-btn:hover { background: var(--primary-dark); } 
+
+ /* ---------- 响应式 ---------- */ 
+ @media (max-width: 768px) { 
+   .pro-panel-two-col { 
+     grid-template-columns: 1fr; 
+   } 
+   .pro-feature-list { 
+     grid-template-columns: 1fr; 
+   } 
+   .annotate-layout { 
+     flex-direction: column; 
+     height: auto; 
+   } 
+   .annotate-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; min-width: 0; } 
+   .annotate-inspector { display: none; } 
+   .annotate-canvas-area { height: 60vw; min-height: 300px; } 
+ } 
+ 
+ /* ============================================================ 
+    专业工具介绍区块 
+    ============================================================ */ 
+ 
+ .pro-tools-section { 
+   background: white; 
+   border-top: 1px solid var(--border-color); 
+   padding: 40px 48px 56px; 
+ } 
+ 
+ .pro-tools-header { 
+   text-align: center; 
+   margin-bottom: 28px; 
+ } 
+ 
+ .pro-tools-title { 
+   font-size: 22px; 
+   font-weight: 700; 
+   color: var(--text-primary); 
+   margin-bottom: 8px; 
+ } 
+ 
+ .pro-tools-subtitle { 
+   font-size: 14px; 
+   color: var(--text-secondary); 
+ } 
+ 
+ /* Tab 切换按钮 */ 
+ .pro-tabs { 
+   display: flex; 
+   justify-content: center; 
+   gap: 8px; 
+   margin-bottom: 24px; 
+ } 
+ 
+ .pro-tab-btn { 
+   padding: 10px 28px; 
+   border-radius: 8px 8px 0 0; 
+   border: 1.5px solid var(--border-color); 
+   border-bottom: none; 
+   background: var(--bg-secondary); 
+   color: var(--text-secondary); 
+   font-size: 14px; 
+   font-weight: 500; 
+   cursor: pointer; 
+   transition: all 0.2s; 
+ } 
+ 
+ .pro-tab-btn:hover { background: #e8f4ff; color: var(--primary); } 
+ 
+ .pro-tab-btn.active { 
+   background: var(--primary); 
+   color: white; 
+   border-color: var(--primary); 
+ } 
+ 
+ /* Tab 面板 */ 
+ .pro-tab-panel { 
+   display: none; 
+   border: 1.5px solid var(--border-color); 
+   border-radius: 0 8px 8px 8px; 
+   padding: 28px 32px; 
+   background: #fafcff; 
+   animation: fadeIn 0.2s ease; 
+ } 
+ 
+ .pro-tab-panel.active { display: block; } 
+ 
+ @keyframes fadeIn { 
+   from { opacity: 0; transform: translateY(4px); } 
+   to   { opacity: 1; transform: translateY(0); } 
+ } 
+ 
+ /* 功能列表 */ 
+ .pro-feature-list { 
+   display: flex; 
+   flex-direction: column; 
+   gap: 16px; 
+ } 
+ 
+ .pro-feature-item { 
+   display: flex; 
+   align-items: flex-start; 
+   gap: 14px; 
+ } 
+ 
+ .pro-feature-icon { 
+   font-size: 22px; 
+   flex-shrink: 0; 
+   line-height: 1.4; 
+ } 
+ 
+ .pro-feature-name { 
+   font-size: 14px; 
+   font-weight: 600; 
+   color: var(--text-primary); 
+   margin-bottom: 2px; 
+ } 
+ 
+ .pro-feature-desc { 
+   font-size: 13px; 
+   color: var(--text-secondary); 
+   line-height: 1.5; 
+ } 
+ 
+ /* Tab1 特有 */ 
+ .pro-panel-tip { 
+   margin-top: 20px; 
+   padding: 12px 16px; 
+   background: rgba(74,155,245,0.08); 
+   border-left: 3px solid var(--primary); 
+   border-radius: 0 6px 6px 0; 
+   font-size: 13px; 
+   color: var(--primary); 
+ } 
+ 
+ /* Tab2/3 两列布局 */ 
+ .pro-panel-two-col { 
+   display: grid; 
+   grid-template-columns: 1fr 1fr; 
+   gap: 32px; 
+   align-items: start; 
+ } 
+ 
+ /* 截图盒子 */ 
+ .pro-screenshot-box { 
+   position: relative; 
+   border-radius: 10px; 
+   overflow: hidden; 
+   background: #f0f4f8; 
+   min-height: 200px; 
+   display: flex; 
+   align-items: center; 
+   justify-content: center; 
+ } 
+ 
+ .pro-screenshot-placeholder { 
+   text-align: center; 
+   padding: 32px; 
+   color: var(--text-muted); 
+ } 
+ 
+ .screenshot-icon  { font-size: 48px; margin-bottom: 10px; } 
+ .screenshot-label { font-size: 15px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; } 
+ .screenshot-sub   { font-size: 12px; } 
+ 
+ .pro-screenshot-img { 
+   width: 100%; 
+   height: auto; 
+   border-radius: 10px; 
+   display: block; 
+   box-shadow: 0 4px 16px rgba(0,0,0,0.1); 
+ } 
+ 
+ .pro-screenshot-img.hidden { display: none; } 
+ 
+ /* 下载按钮 */ 
+ .pro-download-btn { 
+   display: inline-block; 
+   margin-top: 8px; 
+   padding: 10px 20px; 
+   background: var(--primary); 
+   color: white; 
+   border-radius: 8px; 
+   text-decoration: none; 
+   font-size: 14px; 
+   font-weight: 500; 
+   transition: background 0.2s; 
+   text-align: center; 
+ } 
+ 
+ .pro-download-btn:hover { background: #2e7dd1; } 
+ 
+ /* 响应式 */ 
+@media (max-width: 768px) { 
+  .pro-tools-section { padding: 24px 16px 32px; } 
+  .pro-panel-two-col { grid-template-columns: 1fr; } 
+  .pro-tabs { flex-wrap: wrap; } 
+  .pro-tab-btn { flex: 1; min-width: 100px; border-radius: 8px; border-bottom: 1.5px solid; } 
+}
+
+.pro-download-area {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 12px;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.pro-qr-box {
+  text-align: center;
+}
+
+.pro-qr-label {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.annotate-sidebar .sidebar-title {
+  font-size: 12px !important;
+}
+
+.annotate-sidebar .btn,
+.annotate-sidebar .btn-block,
+.annotate-sidebar .category-btn {
+  font-size: 13px !important;
+  padding: 8px 10px !important;
+}
+
+.annotate-sidebar .image-counter,
+.annotate-sidebar .drop-hint,
+.annotate-sidebar .export-info {
+  font-size: 11px !important;
+}
+
+.annotate-sidebar .color-dot {
+  width: 10px !important;
+  height: 10px !important;
+}
+
+.annotate-sidebar {
+  width: 200px !important;
+  min-width: 190px !important;
+}

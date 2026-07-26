@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#4A9BF5">
+  <title>视界 - 盲道智能导航系统</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/assets/icons/favicon.ico">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/views/landing.css">
+  <link rel="stylesheet" href="/css/views/detect.css">
+  <link rel="stylesheet" href="/css/views/annotate.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+  <div id="app">
+
+    <nav class="navbar" role="navigation" aria-label="主导航">
+      <div class="navbar-inner">
+        <div class="navbar-brand" data-nav="#/" role="button" tabindex="0" aria-label="返回首页">
+          <span class="navbar-brand-icon" aria-hidden="true">👁</span>
+          <span>视界</span>
+        </div>
+        <ul class="navbar-menu">
+          <li><a class="navbar-link" data-nav="#/detect" aria-label="实时检测">实时检测</a></li>
+          <li><a class="navbar-link" data-nav="#/annotate" aria-label="标注工具">标注工具</a></li>
+          <li><a class="navbar-link nav-install" href="#" data-action="install" aria-label="安装到手机">安装到手机</a></li>
+          <li><a class="navbar-link" href="https://github.com/" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+      </div>
+    </nav>
+
+
+    <main id="main-content">
+
+      <section class="view active" id="view-landing" role="main" aria-label="首页">
+        <div class="landing-hero">
+          <span class="landing-hero-badge">面向视障群体 · 开源项目</span>
+          <h1 class="landing-hero-title">
+            让每一步都<em>安全可见</em>
+          </h1>
+          <p class="landing-hero-desc">
+            「视界」基于 YOLOv8 与实时视频流分析，通过手机摄像头识别盲道与障碍物，
+            为视障人士提供语音导航与危险预警。你现在可以在网页端体验核心检测功能。
+          </p>
+          <div class="landing-hero-actions">
+            <button class="btn btn-primary btn-lg" data-nav="#/detect" aria-label="开始体验实时检测">
+              立即体验检测
+            </button>
+            <button class="btn btn-outline btn-lg" data-nav="#/annotate" aria-label="打开标注工具">
+              参与数据标注
+            </button>
+          </div>
+        </div>
+
+
+        <div class="landing-features">
+          <h2 class="landing-features-title">三大核心能力</h2>
+          <div class="feature-grid">
+            <div class="card card-hoverable feature-card" data-feature="detect" role="button" tabindex="0" aria-label="实时检测功能">
+              <div class="feature-card-icon">
+                <img src="assets/icons/feature-detect.svg" alt="实时检测"
+                     onerror="this.src='assets/icons/feature-detect.png';this.onerror=null;">
+              </div>
+              <h3 class="feature-card-title">实时环境检测</h3>
+              <p class="feature-card-desc">
+                YOLOv8 + WebSocket 流式推理，识别盲道、障碍物、路径偏离，帧率 15+ FPS
+              </p>
+              <span class="feature-card-tag tag-web">网页可用</span>
+            </div>
+
+
+            <div class="card card-hoverable feature-card" data-feature="annotate" role="button" tabindex="0" aria-label="标注工具">
+              <div class="feature-card-icon">
+                <img src="assets/icons/feature-annotate.svg" alt="数据标注"
+                     onerror="this.src='assets/icons/feature-annotate.png';this.onerror=null;">
+              </div>
+              <h3 class="feature-card-title">众包数据标注</h3>
+              <p class="feature-card-desc">
+                在浏览器中上传照片、标注盲道与障碍物，助力模型迭代，一起让数据集更丰富
+              </p>
+              <span class="feature-card-tag tag-web">网页可用</span>
+            </div>
+
+
+            <div class="card card-hoverable feature-card" data-feature="download" role="button" tabindex="0" aria-label="下载手机端">
+              <div class="feature-card-icon">
+                <img src="assets/icons/feature-mobile.svg" alt="安装到手机"
+                     onerror="this.src='assets/icons/feature-mobile.png';this.onerror=null;">
+              </div>
+              <h3 class="feature-card-title">安装到手机</h3>
+              <p class="feature-card-desc">
+                手机端支持离线模式、SOS 一键求助、手势操作与语音双向交互，完整体验
+              </p>
+              <span class="feature-card-tag tag-mobile">仅手机端</span>
+            </div>
+
+          </div>
+        </div>
+
+
+        <footer class="landing-footer">
+          <div>© 2026 视界 Shijie · MIT License</div>
+          <div style="margin-top: 8px;">
+            <a href="https://github.com/" target="_blank" rel="noopener">GitHub 仓库</a> ·
+            <a href="#/detect">开始检测</a> ·
+            <a href="#/annotate">标注工具</a>
+          </div>
+        </footer>
+      </section>
+
+
+      <section class="view" id="view-detect" role="main" aria-label="实时检测">
+        <div class="detect-container">
+          <div class="detect-video-area">
+            <div class="detect-status-bar">
+              <span>
+                <span class="status-dot offline" id="status-dot"></span>
+                <span id="status-text">未连接</span>
+              </span>
+              <span id="detect-fps">0 FPS</span>
+            </div>
+            <div class="detect-placeholder" id="detect-placeholder">
+              <div class="detect-placeholder-icon" aria-hidden="true"></div>
+              <p>点击下方按钮开始检测</p>
+            </div>
+            <div class="detect-video-wrapper" id="detect-video-wrapper" style="display:none;">
+              <video id="detect-video" autoplay playsinline muted></video>
+              <canvas id="detect-canvas"></canvas>
+            </div>
+          </div>
+          <div class="detect-panel">
+            <div class="detect-panel-section">
+              <div class="detect-panel-title">盲道状态</div>
+              <div class="blind-road-badge not-found" id="blind-road-status">未检测</div>
+            </div>
+            <div class="detect-panel-section">
+              <div class="detect-panel-title">检测目标</div>
+              <ul class="detection-list" id="detection-list">
+                <li class="detection-item" style="color:var(--color-text-secondary);">暂无检测结果</li>
+              </ul>
+            </div>
+            <div class="detect-panel-section">
+              <div class="detect-panel-title">安全等级</div>
+              <div class="warning-indicator warning-level-0" id="warning-indicator">安全</div>
+            </div>
+            <div class="detect-panel-section">
+              <div class="detect-panel-title">语音播报</div>
+              <div id="tts-status" style="font-size:var(--font-xs);color:var(--color-text-secondary);">等待开始...</div>
+            </div>
+            <div class="detect-controls">
+              <button class="btn btn-primary" id="btn-start-detect" aria-label="开始检测">▶ 开始检测</button>
+              <button class="btn btn-outline" id="btn-stop-detect" aria-label="停止检测" style="display:none;">⏹ 停止</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="view" id="view-annotate" role="main" aria-label="标注工具">
+        <div class="annotate-layout">
+
+          <aside class="annotate-sidebar">
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">图片来源</h3>
+              <button class="btn btn-primary btn-block" id="btn-upload-images">
+                上传图片文件夹
+              </button>
+              <div class="file-drop-zone" id="drop-zone">
+                <span class="drop-hint">拖拽图片到此处</span>
+              </div>
+              <div class="image-counter" id="image-counter">未加载图片</div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">图片导航</h3>
+              <div class="nav-controls">
+                <button class="btn btn-icon" id="btn-prev-img" title="上一张">&#8592;</button>
+                <span class="img-index" id="img-index">0 / 0</span>
+                <button class="btn btn-icon" id="btn-next-img" title="下一张">&#8594;</button>
+              </div>
+              <div class="thumbnail-strip" id="thumbnail-strip"></div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">标注类别</h3>
+              <div class="category-list" id="category-list">
+                <button class="category-btn active" data-category="0" data-color="#4A9BF5">
+                  <span class="color-dot" style="background:#4A9BF5"></span>盲道
+                </button>
+                <button class="category-btn" data-category="1" data-color="#F5222D">
+                  <span class="color-dot" style="background:#F5222D"></span>障碍物
+                </button>
+                <button class="category-btn" data-category="2" data-color="#52C41A">
+                  <span class="color-dot" style="background:#52C41A"></span>行人
+                </button>
+                <button class="category-btn" data-category="3" data-color="#FAAD14">
+                  <span class="color-dot" style="background:#FAAD14"></span>车辆
+                </button>
+                <button class="category-btn" data-category="4" data-color="#722ED1">
+                  <span class="color-dot" style="background:#722ED1"></span>坑洼
+                </button>
+                <button class="category-btn" data-category="5" data-color="#13C2C2">
+                  <span class="color-dot" style="background:#13C2C2"></span>台阶
+                </button>
+              </div>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">操作</h3>
+              <button class="btn btn-warning btn-block" id="btn-undo">↩ 撤销</button>
+              <button class="btn btn-danger btn-block" id="btn-clear">🗑 清空标注</button>
+              <button class="btn btn-success btn-block" id="btn-save-label">保存标注</button>
+            </div>
+
+            <div class="sidebar-section">
+              <h3 class="sidebar-title">导出</h3>
+              <div class="export-info" id="export-info">已标注：0 张</div>
+              <button class="btn btn-primary btn-block" id="btn-export-zip">
+                导出 YOLO 数据集
+              </button>
+            </div>
+
+          </aside>
+
+          <main class="annotate-canvas-area">
+            <div class="canvas-toolbar">
+              <span class="toolbar-hint" id="toolbar-hint">请先上传图片</span>
+              <div class="toolbar-right">
+                <button class="tool-btn active" id="tool-draw" title="画框模式">画框</button>
+                <button class="tool-btn" id="tool-select" title="选择模式">选择</button>
+                <button class="tool-btn" id="tool-zoom-in" title="放大">+</button>
+                <button class="tool-btn" id="tool-zoom-out" title="缩小">-</button>
+                <button class="tool-btn" id="tool-zoom-reset" title="重置缩放">⊡</button>
+              </div>
+            </div>
+            <div class="canvas-container" id="canvas-container">
+              <canvas id="annotate-canvas"></canvas>
+              <div class="canvas-placeholder" id="canvas-placeholder">
+                <div class="placeholder-icon"></div>
+                <div class="placeholder-text">上传图片后开始标注</div>
+                <div class="placeholder-sub">支持 JPG、PNG 格式</div>
+              </div>
+            </div>
+          </main>
+
+          <aside class="annotate-inspector">
+            <div class="inspector-header">
+              <h3>标注列表</h3>
+              <span class="annotation-count" id="annotation-count">0 个</span>
+            </div>
+            <div class="annotation-list" id="annotation-list">
+              <div class="empty-list-hint">暂无标注</div>
+            </div>
+            <div class="inspector-footer">
+              <div class="shortcut-hints">
+                <div class="shortcut-item"><kbd>Z</kbd> 撤销</div>
+                <div class="shortcut-item"><kbd>Del</kbd> 删除选中</div>
+                <div class="shortcut-item"><kbd>←→</kbd> 切换图片</div>
+                <div class="shortcut-item"><kbd>1-6</kbd> 选择类别</div>
+              </div>
+            </div>
+          </aside>
+
+        </div>
+
+      <!-- ===== 专业工具介绍区块 ===== -->
+      <section class="pro-tools-section">
+
+        <div class="pro-tools-header">
+          <h2 class="pro-tools-title">完整工具链</h2>
+          <p class="pro-tools-subtitle">
+            网页端提供轻量标注；本地专业版支持多模型训练与评估对比
+          </p>
+        </div>
+
+        <!-- Tab 切换 -->
+        <div class="pro-tabs">
+          <button class="pro-tab-btn active" data-tab="pro-tab-annotate">网页标注</button>
+          <button class="pro-tab-btn" data-tab="pro-tab-train">模型训练</button>
+          <button class="pro-tab-btn" data-tab="pro-tab-eval">模型评估</button>
+        </div>
+
+        <!-- Tab1：网页标注说明 -->
+        <div class="pro-tab-panel active" id="pro-tab-annotate">
+          <div class="pro-panel-content">
+            <div class="pro-feature-list">
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">批量图片上传</div>
+                  <div class="pro-feature-desc">支持拖拽上传，多张图片连续标注</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">6类目标标注</div>
+                  <div class="pro-feature-desc">盲道 / 障碍物 / 行人 / 车辆 / 坑洼 / 台阶</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">键盘快捷键</div>
+                  <div class="pro-feature-desc">Z 撤销、Del 删除、方向键切图、数字键选类别</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">一键导出 YOLO 格式</div>
+                  <div class="pro-feature-desc">自动生成 images/ labels/ dataset.yaml 并打包下载</div>
+                </div>
+              </div>
+            </div>
+            <div class="pro-panel-tip">
+              上方画布即为标注工具，直接上传图片开始体验
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab2：模型训练 -->
+        <div class="pro-tab-panel" id="pro-tab-train">
+          <div class="pro-panel-content pro-panel-two-col">
+            <div class="pro-screenshot-box">
+              <div class="pro-screenshot-placeholder" id="screenshot-train">
+                <div class="screenshot-icon"></div>
+                <div class="screenshot-label">训练工具截图</div>
+                <div class="screenshot-sub">启动本地工具后自动生成</div>
+              </div>
+              <img class="pro-screenshot-img hidden" id="screenshot-train-img"
+                   src="../../docs/screenshots/trainer_tab2.png" alt="训练工具截图"
+                   onerror="this.classList.add('hidden');document.getElementById('screenshot-train').classList.remove('hidden')">
+            </div>
+            <div class="pro-feature-list">
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">多模型并行训练</div>
+                  <div class="pro-feature-desc">YOLOv8n / YOLOv8s / YOLO11n / YOLO11s 一键对比</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">可视化训练配置</div>
+                  <div class="pro-feature-desc">Epochs、Batch、图像尺寸，实时进度日志</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">训练曲线实时绘制</div>
+                  <div class="pro-feature-desc">loss / mAP 曲线，自动保存训练结果</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">子线程训练，界面不卡死</div>
+                  <div class="pro-feature-desc">QThread 异步执行，随时可中止</div>
+                </div>
+              </div>
+              <div class="pro-download-area">
+                <a class="pro-download-btn" href="https://github.com/yourname/blind-road-v2" target="_blank">
+                  查看完整源码
+                </a>
+                <div class="pro-qr-box">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://github.com/yourname/blind-road-v2"
+                       alt="GitHub 二维码"
+                       style="width:100px;height:100px;border-radius:6px;">
+                  <div class="pro-qr-label">扫码查看项目</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab3：模型评估 -->
+        <div class="pro-tab-panel" id="pro-tab-eval">
+          <div class="pro-panel-content pro-panel-two-col">
+            <div class="pro-screenshot-box">
+              <div class="pro-screenshot-placeholder" id="screenshot-eval">
+                <div class="screenshot-icon"></div>
+                <div class="screenshot-label">评估对比截图</div>
+                <div class="screenshot-sub">含雷达图 + 混淆矩阵</div>
+              </div>
+              <img class="pro-screenshot-img hidden" id="screenshot-eval-img"
+                   src="../../docs/screenshots/trainer_tab3.png" alt="评估截图"
+                   onerror="this.classList.add('hidden');document.getElementById('screenshot-eval').classList.remove('hidden')">
+            </div>
+            <div class="pro-feature-list">
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">统一验证集评估</div>
+                  <div class="pro-feature-desc">mAP50 / mAP50-95 / Precision / Recall</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">雷达图多维对比</div>
+                  <div class="pro-feature-desc">精度 / 速度 / 体积 / 召回率 可视化</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">摄像头实时测试</div>
+                  <div class="pro-feature-desc">切换模型实时对比检测效果</div>
+                </div>
+              </div>
+              <div class="pro-feature-item">
+                <span class="pro-feature-icon"></span>
+                <div>
+                  <div class="pro-feature-name">自动推荐最优模型</div>
+                  <div class="pro-feature-desc">综合评分，一键导出最优 best.pt</div>
+                </div>
+              </div>
+              <div class="pro-download-area">
+                <a class="pro-download-btn" href="https://github.com/yourname/blind-road-v2" target="_blank">
+                  查看完整源码
+                </a>
+                <div class="pro-qr-box">
+                  <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://github.com/yourname/blind-road-v2"
+                       alt="GitHub 二维码"
+                       style="width:100px;height:100px;border-radius:6px;">
+                  <div class="pro-qr-label">扫码查看项目</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
